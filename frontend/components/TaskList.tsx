@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import api from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -31,30 +31,26 @@ export default function TaskList() {
     return res.data.data;
   };
 
-  const { data: tasks, refetch } = useQuery<Task[]>(
-    ["tasks", search, statusFilter],
-    fetchTasks
-  );
+  const { data: tasks, refetch } = useQuery<Task[]>({
+    queryKey: ["tasks", search, statusFilter],
+    queryFn: fetchTasks,
+  });
 
-  const toggleStatus = useMutation(
-    async (id: number) => await api.post(`/tasks/${id}/toggle`),
-    {
-      onSuccess: () => {
-        toast.success("Status updated");
-        refetch();
-      },
-    }
-  );
+  const toggleStatus = useMutation({
+    mutationFn: async (id: number) => api.post(`/tasks/${id}/toggle`),
+    onSuccess: () => {
+      toast.success("Status updated");
+      refetch();
+    },
+  });
 
-  const deleteTask = useMutation(
-    async (id: number) => await api.delete(`/tasks/${id}`),
-    {
-      onSuccess: () => {
-        toast.success("Task deleted");
-        refetch();
-      },
-    }
-  );
+  const deleteTask = useMutation({
+    mutationFn: async (id: number) => api.delete(`/tasks/${id}`),
+    onSuccess: () => {
+      toast.success("Task deleted");
+      refetch();
+    },
+  });
 
   // LOGOUT HANDLER
   const handleLogout = () => {
