@@ -3,7 +3,13 @@
 import * as React from "react";
 import "./globals.css";
 import { ReactNode } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import {
+  useQuery,
+  useMutation,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // app/layout.tsx
